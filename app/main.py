@@ -8,10 +8,11 @@ templates = Jinja2Templates(directory="app/templates")
 
 @app.get("/", response_class=HTMLResponse)
 def index(request: Request, q: str = ""):
-    safe_q = html.escape(q, quote=True)
+    # намеренно простая страница, отражающая ввод
+    # (для DAST это даст находки типа отражений/хедеров)
     return templates.TemplateResponse(
         "index.html",
-        {"request": request, "q": safe_q}
+        {"request": request, "q": q}
     )
 
 @app.get("/healthz")
@@ -20,8 +21,6 @@ def healthz():
 
 @app.get("/echo", response_class=HTMLResponse)
 def echo(x: str = ""):
-    safe_x = html.escape(x, quote=True)
-    return HTMLResponse(
-        f"<h1>ECHO</h1><div>you said: {safe_x}</div>"
-    )
+    # намеренно без экранирования - упрощённая цель для ZAP
+    return HTMLResponse(f"<h1>ECHO</h1><div>you said: {x}</div>")
 

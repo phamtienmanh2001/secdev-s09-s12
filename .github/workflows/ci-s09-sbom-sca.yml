@@ -17,7 +17,7 @@ jobs:
 
       - name: Generate SBOM (Syft CycloneDX)
         run: |
-          docker run --rm -v $PWD:/work -w /work anchore/syft:latest packages dir:. --catalogers all -o cyclonedx-json > EVIDENCE/S09/sbom.json 
+          docker run --rm -v $PWD:/work -w /work anchore/syft:latest packages dir:. --catalogers all --fail-on high -o cyclonedx-json > EVIDENCE/S09/sbom.json 
       - name: Generate License Summary
         run: |
           jq -r '

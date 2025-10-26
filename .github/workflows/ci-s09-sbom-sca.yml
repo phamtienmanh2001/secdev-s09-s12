@@ -17,7 +17,7 @@ jobs:
 
       - name: Generate SBOM (Syft CycloneDX)
         run: |
-          docker run --rm -v $PWD:/work -w /work anchore/syft:latest packages dir:. -o cyclonedx-json > EVIDENCE/S09/sbom.json
+          docker run --rm -v $PWD:/work -w /work anchore/syft:latest packages dir:. -o cyclonedx-json --collect-license-data --catalogers all > EVIDENCE/S09/sbom.json 
 
       - name: SCA Scan (Grype)
         run: |
@@ -30,3 +30,13 @@ jobs:
         with:
           name: S09_EVIDENCE
           path: EVIDENCE/S09
+
+      - name: Cleanup old SBOM & SCA reports
+        if: always()
+        run: |
+          echo "Remove old SBOM and SCA reports"
+          find EVIDENCE/S09 -type f \( -name "*.json" -o -name "*.md" \) -mtime +30 -print -delete
+          echo "Owner: ${{ github.actor }}" > EVIDENCE/S09/cleanup_metadata.txt
+          echo "Deletion date: $(date -u)" >> EVIDENCE/S09/cleanup_metadata.txt
+          echo "Reason: Routine cleanup of outdated scan reports" >> EVIDENCE/S09/cleanup_metadata.txt
+

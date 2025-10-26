@@ -5,6 +5,7 @@ on:
     paths:
       - 'Dockerfile'
       - 'iac/**'
+      - 'requirements.txt'
       - '.github/workflows/ci-s12-iac-container.yml'
 jobs:
   s12:

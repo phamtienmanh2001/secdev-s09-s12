@@ -31,6 +31,7 @@ jobs:
           docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $PWD:/work aquasec/trivy:latest image --format json --output /work/EVIDENCE/S12/trivy.json --ignore-unfixed s09s12-app:ci --severity HIGH,CRITICAL --exit-code 1
 
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: S12_EVIDENCE
           path: EVIDENCE/S12
